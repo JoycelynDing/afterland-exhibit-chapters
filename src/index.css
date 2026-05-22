@@ -1,0 +1,354 @@
+:root {
+  /* Asset Mapping */
+  --afterland-landing-bg: url("./assets/landing-reference.png");
+  --afterland-desk-bg: #1a0f05; /* Use dark wood color for interaction areas */
+  --afterland-paper-bg: #f4efdf; /* TODO: Use Asset [Screenshot_DiaryPage.jpg] */
+  
+  /* Color Authority */
+  --afterland-ink: #3d352a;
+  --afterland-accent: #8b7355;
+  --afterland-paper-light: #f4efdf;
+  --afterland-paper-dark: #ede8d5;
+  --afterland-desk-wood: #2a1a0f;
+  
+  /* Layout Constraints */
+  --afterland-btn-border-width: 1px;
+  --afterland-btn-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+
+  /* Typography */
+  --afterland-font-chinese: "NanoOldSong", "STSong", "Songti SC", serif;
+  --afterland-font-global-ui: "FZ QingKe YueSong", "NanoOldSong", "STSong", "Songti SC", serif;
+  --afterland-font-book: var(--afterland-font-chinese);
+  --afterland-font-body: var(--afterland-font-global-ui);
+  --afterland-font-display: var(--afterland-font-global-ui);
+  --afterland-font-ui: var(--afterland-font-global-ui);
+}
+
+@keyframes landing-dust-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.12;
+  }
+  50% {
+    transform: translate3d(-1.5%, 1.2%, 0) scale(1.04);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.12;
+  }
+}
+
+@keyframes landing-light-sweep {
+  0% {
+    transform: translate3d(-3%, 2%, 0) scale(0.98);
+    opacity: 0.14;
+  }
+  50% {
+    transform: translate3d(2%, -1%, 0) scale(1.04);
+    opacity: 0.24;
+  }
+  100% {
+    transform: translate3d(-3%, 2%, 0) scale(0.98);
+    opacity: 0.14;
+  }
+}
+
+@keyframes landing-vignette-breathe {
+  0%,
+  100% {
+    opacity: 0.82;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes afterland-choice-glyph-jitter {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate3d(-0.02em, -0.015em, 0) rotate(-0.8deg);
+  }
+  50% {
+    transform: translate3d(0.018em, 0.01em, 0) rotate(0.7deg);
+  }
+  75% {
+    transform: translate3d(-0.012em, 0.018em, 0) rotate(-0.45deg);
+  }
+}
+
+@font-face {
+  font-family: "NanoOldSong";
+  src: url("./assets/fonts/NanoOldSongA-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "FZ QingKe YueSong";
+  src: url("./assets/fonts/FZQingKeYueSong.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fern Text";
+  src: url("./assets/fonts/FernText-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fern Text";
+  src: url("./assets/fonts/FernText-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fern Text";
+  src: url("./assets/fonts/FernText-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fern Text";
+  src: url("./assets/fonts/FernText-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "NanoOldSong", "STSong", "Songti SC", serif;
+  --font-display: "FZ QingKe YueSong", "NanoOldSong", "STSong", "Songti SC", serif;
+  --font-chinese: "FZ QingKe YueSong", "NanoOldSong", "STSong", "Songti SC", serif;
+  --font-mono: "FZ QingKe YueSong", "NanoOldSong", "STSong", "Songti SC", serif;
+  
+  --color-arch-bg: #1c1a17;
+  --color-arch-paper: #e8e4d9;
+  --color-diary-paper: var(--afterland-paper-light);
+  --color-diary-ink: var(--afterland-ink);
+  --color-arch-ink: #2c2924;
+  --color-arch-accent: var(--afterland-accent);
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    @apply bg-arch-bg text-arch-paper font-serif;
+    font-family: var(--afterland-font-body);
+    line-height: 1.55;
+    font-size: 15px;
+    font-synthesis: none;
+    font-kerning: normal;
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
+  }
+
+  body[data-language="en"] {
+    --afterland-font-body: "Fern Text", "NanoOldSong", "Iowan Old Style", "Georgia", serif;
+    --afterland-font-display: "Fern Text", "NanoOldSong", "Iowan Old Style", "Georgia", serif;
+    --afterland-font-ui: "Fern Text", "NanoOldSong", "Iowan Old Style", "Georgia", serif;
+    --afterland-font-book: "Fern Text", "NanoOldSong", "Iowan Old Style", "Georgia", serif;
+  }
+
+  .font-serif {
+    font-family: var(--afterland-font-body) !important;
+  }
+
+  .font-display {
+    font-family: var(--afterland-font-display) !important;
+  }
+
+  .font-chinese {
+    font-family: var(--afterland-font-ui) !important;
+  }
+
+  .font-mono {
+    font-family: var(--afterland-font-display) !important;
+  }
+
+  .afterland-book-scope,
+  .afterland-book-scope .font-serif,
+  .afterland-book-scope .font-display,
+  .afterland-book-scope .font-chinese,
+  .afterland-book-scope .font-mono {
+    font-family: var(--afterland-font-book) !important;
+  }
+
+  body[data-language="en"] :lang(zh),
+  body[data-language="en"] :lang(zh-CN),
+  body[data-language="en"] :lang(zh-Hans),
+  body[data-language="en"] :lang(zh-TW),
+  body[data-language="en"] :lang(zh-Hant) {
+    font-family: var(--afterland-font-chinese) !important;
+  }
+}
+
+@layer utilities {
+  .landing-surface-asset {
+    background-color: #0f0906;
+    position: relative;
+    isolation: isolate;
+  }
+
+  .landing-bg-image {
+    background-image: var(--afterland-landing-bg);
+    background-position: 54% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .landing-dust-layer {
+    background-image:
+      radial-gradient(circle at 18% 24%, rgba(255, 221, 180, 0.18) 0, rgba(255, 221, 180, 0.18) 0.08rem, transparent 0.16rem),
+      radial-gradient(circle at 27% 66%, rgba(255, 236, 205, 0.16) 0, rgba(255, 236, 205, 0.16) 0.07rem, transparent 0.15rem),
+      radial-gradient(circle at 43% 31%, rgba(255, 224, 179, 0.16) 0, rgba(255, 224, 179, 0.16) 0.09rem, transparent 0.18rem),
+      radial-gradient(circle at 62% 54%, rgba(255, 233, 194, 0.16) 0, rgba(255, 233, 194, 0.16) 0.08rem, transparent 0.16rem),
+      radial-gradient(circle at 78% 19%, rgba(255, 213, 142, 0.22) 0, rgba(255, 213, 142, 0.22) 0.08rem, transparent 0.16rem),
+      radial-gradient(circle at 86% 42%, rgba(255, 227, 185, 0.18) 0, rgba(255, 227, 185, 0.18) 0.07rem, transparent 0.15rem);
+    animation: landing-dust-drift 3.6s ease-in-out infinite;
+    mix-blend-mode: screen;
+    opacity: 0.15;
+  }
+
+  .landing-light-sweep {
+    background:
+      radial-gradient(circle at 78% 18%, rgba(255, 204, 112, 0.28), transparent 18%),
+      radial-gradient(circle at 66% 52%, rgba(170, 92, 42, 0.16), transparent 24%),
+      linear-gradient(110deg, transparent 18%, rgba(255, 214, 155, 0.1) 42%, transparent 68%);
+    animation: landing-light-sweep 3.6s ease-in-out infinite;
+    filter: blur(22px);
+    mix-blend-mode: screen;
+  }
+
+  .landing-vignette {
+    background:
+      linear-gradient(to bottom, rgba(8, 4, 2, 0.4), rgba(8, 4, 2, 0.08) 32%, rgba(8, 4, 2, 0.58)),
+      radial-gradient(circle at center, transparent 38%, rgba(9, 5, 3, 0.52) 100%);
+    animation: landing-vignette-breathe 3.6s ease-in-out infinite;
+  }
+
+  .desk-surface-asset {
+    background-color: var(--afterland-desk-bg);
+    background-image: radial-gradient(circle at 50% 0%, rgba(139, 115, 85, 0.1) 0%, transparent 70%);
+    position: relative;
+  }
+
+  .diary-page-asset {
+    background-color: var(--afterland-paper-bg);
+    /* Asset texture will go here when available */
+  }
+
+  /* Strict Button Execution */
+  .afterland-btn {
+    border: var(--afterland-btn-border-width) solid var(--afterland-accent);
+    box-shadow: var(--afterland-btn-shadow);
+    background-color: rgba(26, 15, 5, 0.4);
+    backdrop-filter: blur(4px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .afterland-btn:hover {
+    box-shadow: 0 0 15px var(--afterland-accent);
+    background-color: rgba(139, 115, 85, 0.1);
+  }
+
+  .text-indent-2em {
+    text-indent: 2em;
+  }
+
+  .afterland-copy {
+    text-wrap: pretty;
+    word-break: normal;
+    line-break: loose;
+    overflow-wrap: break-word;
+  }
+
+  .afterland-story-copy {
+    text-wrap: wrap;
+  }
+
+  .afterland-choice-glyph {
+    display: inline-block;
+    will-change: transform;
+    animation: afterland-choice-glyph-jitter 1.2s ease-in-out infinite;
+  }
+
+  .afterland-choice-glyph--still {
+    animation: none;
+  }
+
+  .afterland-label {
+    white-space: nowrap;
+    letter-spacing: 0.12em;
+  }
+
+  .afterland-meta {
+    font-size: clamp(0.58rem, 0.56rem + 0.12vw, 0.72rem);
+    letter-spacing: 0.26em;
+  }
+
+  .afterland-title {
+    font-size: clamp(1.45rem, 1.1rem + 1.2vw, 2.45rem);
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+  }
+
+  .afterland-body {
+    font-size: clamp(0.92rem, 0.87rem + 0.16vw, 1rem);
+    line-height: 2.02;
+    letter-spacing: 0.02em;
+  }
+
+  body[data-language="en"] .afterland-copy {
+    line-break: auto;
+    hyphens: auto;
+  }
+
+  body[data-language="en"] .afterland-label {
+    letter-spacing: 0.06em;
+  }
+
+  body[data-language="en"] .afterland-meta {
+    letter-spacing: 0.16em;
+  }
+
+  body[data-language="en"] .afterland-title {
+    line-height: 1.12;
+    letter-spacing: 0.035em;
+  }
+
+  body[data-language="en"] .afterland-body {
+    line-height: 1.78;
+    letter-spacing: 0.01em;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--afterland-accent);
+    border-radius: 4px;
+  }
+}
