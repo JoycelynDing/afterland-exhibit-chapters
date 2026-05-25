@@ -41,6 +41,7 @@ import {
   type CollectibleClueId,
   type CollectibleClueConfig,
 } from "./storyMedia";
+import { storageGetItem, storageKeys, storageRemoveItem, storageSetItem } from "./utils/safeStorage";
 import afterlandStoryData from "./narrative/afterland.ink.json";
 import storyData from "./narrative/sample.json";
 
@@ -211,7 +212,7 @@ const readStoredValue = (key: string) => {
     return null;
   }
 
-  return window.localStorage.getItem(key);
+  return storageGetItem(key);
 };
 
 const readStoredLanguage = (): Language => {
@@ -334,10 +335,10 @@ const clearReaderProgress = ({
   readerStorageKey?: string;
 }) => {
   if (storyStorageKey) {
-    window.localStorage.removeItem(storyStorageKey);
+    storageRemoveItem(storyStorageKey);
   }
   if (readerStorageKey) {
-    window.localStorage.removeItem(readerStorageKey);
+    storageRemoveItem(readerStorageKey);
   }
 };
 
@@ -349,9 +350,9 @@ const clearChapterProgress = (chapterId: string) => {
 };
 
 const clearAllGameplayProgress = () => {
-  Object.keys(window.localStorage).forEach((key) => {
+  storageKeys().forEach((key) => {
     if (key.startsWith("afterland-") && !PRESERVED_GLOBAL_STORAGE_KEYS.has(key)) {
-      window.localStorage.removeItem(key);
+      storageRemoveItem(key);
     }
   });
 };
@@ -359,12 +360,12 @@ const clearAllGameplayProgress = () => {
 const collectGameplayStorageSnapshot = () => {
   const snapshot: Record<string, string> = {};
 
-  Object.keys(window.localStorage).forEach((key) => {
+  storageKeys().forEach((key) => {
     if (!key.startsWith("afterland-") || PRESERVED_GLOBAL_STORAGE_KEYS.has(key)) {
       return;
     }
 
-    const value = window.localStorage.getItem(key);
+    const value = storageGetItem(key);
     if (value !== null) {
       snapshot[key] = value;
     }
@@ -377,13 +378,13 @@ const restoreGameplayStorageSnapshot = (snapshot: Record<string, string>) => {
   clearAllGameplayProgress();
   Object.entries(snapshot).forEach(([key, value]) => {
     if (!PRESERVED_GLOBAL_STORAGE_KEYS.has(key)) {
-      window.localStorage.setItem(key, value);
+      storageSetItem(key, value);
     }
   });
 };
 
 const readPlaythroughSaveSlots = (): PlaythroughSaveSlot[] => {
-  const raw = window.localStorage.getItem(GAME_SAVE_SLOTS_STORAGE_KEY);
+  const raw = storageGetItem(GAME_SAVE_SLOTS_STORAGE_KEY);
   if (!raw) return [];
 
   try {
@@ -400,17 +401,17 @@ const readPlaythroughSaveSlots = (): PlaythroughSaveSlot[] => {
       )
       .slice(0, MAX_PLAYTHROUGH_SAVE_SLOTS);
   } catch {
-    window.localStorage.removeItem(GAME_SAVE_SLOTS_STORAGE_KEY);
+    storageRemoveItem(GAME_SAVE_SLOTS_STORAGE_KEY);
     return [];
   }
 };
 
 const writePlaythroughSaveSlots = (slots: PlaythroughSaveSlot[]) => {
-  window.localStorage.setItem(GAME_SAVE_SLOTS_STORAGE_KEY, JSON.stringify(slots.slice(0, MAX_PLAYTHROUGH_SAVE_SLOTS)));
+  storageSetItem(GAME_SAVE_SLOTS_STORAGE_KEY, JSON.stringify(slots.slice(0, MAX_PLAYTHROUGH_SAVE_SLOTS)));
 };
 
 const readGameSaveState = (): GameSaveState | null => {
-  const savedRaw = window.localStorage.getItem(GAME_SAVE_STORAGE_KEY);
+  const savedRaw = storageGetItem(GAME_SAVE_STORAGE_KEY);
   if (!savedRaw) return null;
 
   try {
@@ -430,7 +431,7 @@ const readGameSaveState = (): GameSaveState | null => {
       isEchoing: Boolean(saved.isEchoing),
     };
   } catch {
-    window.localStorage.removeItem(GAME_SAVE_STORAGE_KEY);
+    storageRemoveItem(GAME_SAVE_STORAGE_KEY);
     return null;
   }
 };
@@ -3009,20 +3010,20 @@ const DiaryArtifactView = ({
   const [collectedCollectibleIds, setCollectedCollectibleIds] = useState<CollectibleClueId[]>(() =>
     typeof window === "undefined"
       ? []
-      : COLLECTIBLE_CLUE_IDS.filter((id) => window.localStorage.getItem(COLLECTIBLE_CLUES[id].storageKey) === "true"),
+      : COLLECTIBLE_CLUE_IDS.filter((id) => storageGetItem(COLLECTIBLE_CLUES[id].storageKey) === "true"),
   );
   const [unreadCollectibleIds, setUnreadCollectibleIds] = useState<CollectibleClueId[]>(() =>
     typeof window === "undefined"
       ? []
-      : COLLECTIBLE_CLUE_IDS.filter((id) => window.localStorage.getItem(COLLECTIBLE_CLUES[id].unreadStorageKey) === "true"),
+      : COLLECTIBLE_CLUE_IDS.filter((id) => storageGetItem(COLLECTIBLE_CLUES[id].unreadStorageKey) === "true"),
   );
   const [pendingCollectibleId, setPendingCollectibleId] = useState<string | null>(() =>
     typeof window === "undefined"
       ? null
       : (COLLECTIBLE_CLUE_IDS.find(
           (id) =>
-            window.localStorage.getItem(COLLECTIBLE_CLUES[id].storageKey) !== "true" &&
-            window.localStorage.getItem(COLLECTIBLE_CLUES[id].pendingStorageKey) === "true",
+            storageGetItem(COLLECTIBLE_CLUES[id].storageKey) !== "true" &&
+            storageGetItem(COLLECTIBLE_CLUES[id].pendingStorageKey) === "true",
         ) ?? null),
   );
   const [inspectingCollectibleId, setInspectingCollectibleId] = useState<string | null>(null);
@@ -3040,7 +3041,7 @@ const DiaryArtifactView = ({
     }
 
     return Object.fromEntries(
-      chapters.map((chapter) => [chapter.id, window.localStorage.getItem(getChapterCompletionKey(chapter.id)) === "true"]),
+      chapters.map((chapter) => [chapter.id, storageGetItem(getChapterCompletionKey(chapter.id)) === "true"]),
     );
   });
   const pageLang = language === "en" ? "en" : "zh-CN";
@@ -3076,7 +3077,7 @@ const DiaryArtifactView = ({
     }
 
     setUnreadCollectibleIds((prev) => prev.filter((item) => item !== clue.id));
-    window.localStorage.removeItem(clue.unreadStorageKey);
+    storageRemoveItem(clue.unreadStorageKey);
   }, []);
 
   const handleCollectibleTrigger = useCallback(
@@ -3086,7 +3087,7 @@ const DiaryArtifactView = ({
         return;
       }
 
-      window.localStorage.setItem(clue.pendingStorageKey, "true");
+      storageSetItem(clue.pendingStorageKey, "true");
       setCollectibleHintVisible(false);
       setPendingCollectibleId(clue.id);
     },
@@ -3117,8 +3118,8 @@ const DiaryArtifactView = ({
       return;
     }
 
-    window.localStorage.setItem(clue.storageKey, "true");
-    window.localStorage.removeItem(clue.pendingStorageKey);
+    storageSetItem(clue.storageKey, "true");
+    storageRemoveItem(clue.pendingStorageKey);
     setCollectedCollectibleIds((prev) => (prev.includes(clue.id) ? prev : [...prev, clue.id]));
     setPendingCollectibleId(null);
     setInspectingCollectibleId(null);
@@ -3129,7 +3130,7 @@ const DiaryArtifactView = ({
       return;
     }
 
-    window.localStorage.setItem(clue.unreadStorageKey, "true");
+    storageSetItem(clue.unreadStorageKey, "true");
     setUnreadCollectibleIds((prev) => (prev.includes(clue.id) ? prev : [...prev, clue.id]));
   }, [activeSection, markCollectibleRead]);
 
@@ -3247,10 +3248,10 @@ const DiaryArtifactView = ({
     }
 
     clearChapterProgress(chapterId);
-    window.localStorage.setItem(getChapterCompletionKey(chapterId), "true");
+    storageSetItem(getChapterCompletionKey(chapterId), "true");
     const nextChapter = chapters[chapters.findIndex((chapter) => chapter.id === chapterId) + 1];
     if (nextChapter) {
-      window.localStorage.setItem(getChapterUnlockKey(nextChapter.id), "true");
+      storageSetItem(getChapterUnlockKey(nextChapter.id), "true");
     }
     setCompletedChapters((prev) => ({ ...prev, [chapterId]: true }));
     setChapterPanelVersions((prev) => ({ ...prev, [chapterId]: (prev[chapterId] ?? 0) + 1 }));
@@ -3799,11 +3800,11 @@ export default function App() {
   }, [isExhibitionMode]);
 
   useEffect(() => {
-    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+    storageSetItem(LANGUAGE_STORAGE_KEY, language);
   }, [language]);
 
   useEffect(() => {
-    window.localStorage.setItem(BODY_TEXT_SIZE_STORAGE_KEY, bodyTextSize);
+    storageSetItem(BODY_TEXT_SIZE_STORAGE_KEY, bodyTextSize);
   }, [bodyTextSize]);
 
   useEffect(() => {
@@ -3820,23 +3821,23 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    window.localStorage.setItem(MUSIC_ENABLED_STORAGE_KEY, String(musicEnabled));
+    storageSetItem(MUSIC_ENABLED_STORAGE_KEY, String(musicEnabled));
   }, [musicEnabled]);
 
   useEffect(() => {
-    window.localStorage.setItem(MUSIC_VOLUME_STORAGE_KEY, String(musicVolume));
+    storageSetItem(MUSIC_VOLUME_STORAGE_KEY, String(musicVolume));
   }, [musicVolume]);
 
   useEffect(() => {
-    window.localStorage.setItem(SFX_ENABLED_STORAGE_KEY, String(sfxEnabled));
+    storageSetItem(SFX_ENABLED_STORAGE_KEY, String(sfxEnabled));
   }, [sfxEnabled]);
 
   useEffect(() => {
-    window.localStorage.setItem(AUTO_PLAY_ENABLED_STORAGE_KEY, String(autoPlayEnabled));
+    storageSetItem(AUTO_PLAY_ENABLED_STORAGE_KEY, String(autoPlayEnabled));
   }, [autoPlayEnabled]);
 
   useEffect(() => {
-    window.localStorage.setItem(AUTO_PLAY_SPEED_STORAGE_KEY, String(autoPlaySpeed));
+    storageSetItem(AUTO_PLAY_SPEED_STORAGE_KEY, String(autoPlaySpeed));
   }, [autoPlaySpeed]);
 
   useEffect(() => {
@@ -4016,7 +4017,7 @@ export default function App() {
       isEchoing,
     };
 
-    window.localStorage.setItem(GAME_SAVE_STORAGE_KEY, JSON.stringify(saveState));
+    storageSetItem(GAME_SAVE_STORAGE_KEY, JSON.stringify(saveState));
   }, [activeChapter.id, activeTab, isEchoing, isExhibitionMode, view]);
 
   const persistCurrentNonLandingState = () => {
@@ -4031,7 +4032,7 @@ export default function App() {
       isEchoing,
     };
 
-    window.localStorage.setItem(GAME_SAVE_STORAGE_KEY, JSON.stringify(saveState));
+    storageSetItem(GAME_SAVE_STORAGE_KEY, JSON.stringify(saveState));
   };
 
   const saveCurrentPlaythroughToSlot = () => {

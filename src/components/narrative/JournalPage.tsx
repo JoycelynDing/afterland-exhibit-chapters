@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Story } from "inkjs";
 import { Sparkles } from "lucide-react";
 import { useStory } from "./StoryContext";
+import {storageGetItem, storageRemoveItem, storageSetItem} from "../../utils/safeStorage";
 
 interface ChoiceOption {
   index: number;
@@ -949,13 +950,13 @@ export const JournalPage = ({
 
     restoredProgressKeyRef.current = progressStorageKey;
 
-    const persistedRaw = window.localStorage.getItem(progressStorageKey);
+    const persistedRaw = storageGetItem(progressStorageKey);
     if (!persistedRaw) {
       let restoredFromStorySnapshot = false;
 
       if (storyStorageKey) {
         try {
-          const storySnapshot = JSON.parse(window.localStorage.getItem(storyStorageKey) ?? "{}") as PersistedInkSnapshot;
+          const storySnapshot = JSON.parse(storageGetItem(storyStorageKey) ?? "{}") as PersistedInkSnapshot;
           if (typeof storySnapshot.storyStateJson === "string") {
             const replayedHistory = replayHistoryToStoryState(storySnapshot.storyStateJson);
             if (replayedHistory?.length) {
@@ -1040,7 +1041,7 @@ export const JournalPage = ({
 
       if (storyStorageKey) {
         try {
-          const storySnapshot = JSON.parse(window.localStorage.getItem(storyStorageKey) ?? "{}") as PersistedInkSnapshot;
+          const storySnapshot = JSON.parse(storageGetItem(storyStorageKey) ?? "{}") as PersistedInkSnapshot;
           if (typeof storySnapshot.storyStateJson === "string") {
             const replayedHistory = replayHistoryToStoryState(storySnapshot.storyStateJson);
             if (replayedHistory) {
@@ -1116,7 +1117,7 @@ export const JournalPage = ({
       setChoicesRevealed(Boolean(snapshot.choicesRevealed));
     } catch (error) {
       console.warn("Failed to restore reader progress:", error);
-      window.localStorage.removeItem(progressStorageKey);
+      storageRemoveItem(progressStorageKey);
     }
 
     readerProgressReadyRef.current = true;
@@ -1729,7 +1730,7 @@ export const JournalPage = ({
       turnCount,
     };
 
-    window.localStorage.setItem(progressStorageKey, JSON.stringify(snapshot));
+    storageSetItem(progressStorageKey, JSON.stringify(snapshot));
   }, [
     currentLinesToDisplay,
     currentPageIndex,

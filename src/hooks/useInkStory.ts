@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Story } from 'inkjs';
+import {storageGetItem, storageRemoveItem, storageSetItem} from '../utils/safeStorage';
 
 export interface InkChoice {
   text: string;
@@ -62,7 +63,7 @@ export const useInkStory = ({ storyJson, onTag, storageKey, initialPath }: UseIn
         turnCount: nextTurnCount,
       };
 
-      window.localStorage.setItem(storageKey, JSON.stringify(snapshot));
+      storageSetItem(storageKey, JSON.stringify(snapshot));
     },
     [storageKey],
   );
@@ -108,7 +109,7 @@ export const useInkStory = ({ storyJson, onTag, storageKey, initialPath }: UseIn
       setStory(newStory);
 
       if (storageKey) {
-        const persistedRaw = window.localStorage.getItem(storageKey);
+        const persistedRaw = storageGetItem(storageKey);
         if (persistedRaw) {
           try {
             const snapshot = JSON.parse(persistedRaw) as Partial<PersistedInkSnapshot>;
@@ -122,7 +123,7 @@ export const useInkStory = ({ storyJson, onTag, storageKey, initialPath }: UseIn
             }
           } catch (error) {
             console.warn("Failed to restore Ink story snapshot:", error);
-            window.localStorage.removeItem(storageKey);
+            storageRemoveItem(storageKey);
           }
         }
       }
