@@ -2985,6 +2985,8 @@ const DiaryArtifactView = ({
   isEchoing,
   setIsEchoing,
   bodyTextSizePt,
+  autoPlayEnabled,
+  autoPlaySpeed,
   memoryStartRequest,
   exhibitionMode = null,
   onLockedInteraction,
@@ -2996,6 +2998,8 @@ const DiaryArtifactView = ({
   isEchoing: boolean;
   setIsEchoing: (value: boolean) => void;
   bodyTextSizePt: number;
+  autoPlayEnabled: boolean;
+  autoPlaySpeed: number;
   memoryStartRequest: MemoryStartRequest | null;
   exhibitionMode?: ExhibitionMode | null;
   onLockedInteraction?: () => void;
@@ -4213,6 +4217,8 @@ export default function App() {
                   isEchoing={isEchoing}
                   setIsEchoing={setIsEchoing}
                   bodyTextSizePt={bodyTextSizePt}
+                  autoPlayEnabled={autoPlayEnabled}
+                  autoPlaySpeed={autoPlaySpeed}
                   memoryStartRequest={memoryStartRequest}
                   exhibitionMode={exhibitionMode}
                   onLockedInteraction={showExhibitionLockedNotice}
