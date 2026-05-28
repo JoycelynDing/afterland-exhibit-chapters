@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { Story } from "inkjs";
 import { Sparkles } from "lucide-react";
@@ -166,7 +167,7 @@ interface NotebookPage {
 const NOTEBOOK_COLUMN_GAP_PX = 64;
 const NOTEBOOK_INLINE_SKETCH_WIDTH_PERCENT = 128;
 const TYPEWRITER_MIN_STEP_MS = 10;
-const TYPEWRITER_MAX_STEP_MS = 42;
+const TYPEWRITER_MAX_STEP_MS = 68;
 const AUTO_PLAY_PARAGRAPH_DELAY_MS = 320;
 const CHOICE_RESOLVE_DELAY_MS = 420;
 const PAGE_TRANSITION = { duration: 0.34, ease: "easeOut" } as const;
@@ -197,34 +198,41 @@ const ScreenEdgeProgress = ({
   const topProgress = Math.min(1, Math.max(0, segmentProgress - 1));
   const rightProgress = Math.min(1, Math.max(0, segmentProgress - 2));
   const transition = { duration: animateQuickly ? 0.18 : 0.32, ease: "easeOut" as const };
-
-  return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[120] overflow-hidden">
-      <div className="absolute inset-[0.72rem]">
-        <motion.div
-          initial={false}
-          animate={{ scaleY: leftProgress, opacity: leftProgress > 0.001 ? 1 : 0 }}
-          transition={transition}
-          style={{ transformOrigin: "bottom center" }}
-          className="absolute bottom-0 left-0 top-0 w-[5px] rounded-full bg-[#f7edd8] shadow-[0_0_10px_rgba(255,244,218,0.92),0_0_22px_rgba(255,244,218,0.5)]"
-        />
-        <motion.div
-          initial={false}
-          animate={{ scaleX: topProgress, opacity: topProgress > 0.001 ? 1 : 0 }}
-          transition={transition}
-          style={{ transformOrigin: "left center" }}
-          className="absolute left-0 right-0 top-0 h-[5px] rounded-full bg-[#f7edd8] shadow-[0_0_10px_rgba(255,244,218,0.92),0_0_22px_rgba(255,244,218,0.5)]"
-        />
-        <motion.div
-          initial={false}
-          animate={{ scaleY: rightProgress, opacity: rightProgress > 0.001 ? 1 : 0 }}
-          transition={transition}
-          style={{ transformOrigin: "top center" }}
-          className="absolute bottom-0 right-0 top-0 w-[5px] rounded-full bg-[#f7edd8] shadow-[0_0_10px_rgba(255,244,218,0.92),0_0_22px_rgba(255,244,218,0.5)]"
-        />
-      </div>
+  const content = (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none z-[120] overflow-hidden"
+      style={{ position: "fixed", inset: 0, width: "100vw", height: "100vh" }}
+    >
+      <motion.div
+        initial={false}
+        animate={{ scaleY: leftProgress, opacity: leftProgress > 0.001 ? 1 : 0 }}
+        transition={transition}
+        style={{ transformOrigin: "bottom center" }}
+        className="absolute bottom-0 left-0 top-0 w-[5px] rounded-full bg-[#f7edd8] shadow-[0_0_10px_rgba(255,244,218,0.92),0_0_22px_rgba(255,244,218,0.5)]"
+      />
+      <motion.div
+        initial={false}
+        animate={{ scaleX: topProgress, opacity: topProgress > 0.001 ? 1 : 0 }}
+        transition={transition}
+        style={{ transformOrigin: "left center" }}
+        className="absolute left-0 right-0 top-0 h-[5px] rounded-full bg-[#f7edd8] shadow-[0_0_10px_rgba(255,244,218,0.92),0_0_22px_rgba(255,244,218,0.5)]"
+      />
+      <motion.div
+        initial={false}
+        animate={{ scaleY: rightProgress, opacity: rightProgress > 0.001 ? 1 : 0 }}
+        transition={transition}
+        style={{ transformOrigin: "top center" }}
+        className="absolute bottom-0 right-0 top-0 w-[5px] rounded-full bg-[#f7edd8] shadow-[0_0_10px_rgba(255,244,218,0.92),0_0_22px_rgba(255,244,218,0.5)]"
+      />
     </div>
   );
+
+  if (typeof document === "undefined") {
+    return content;
+  }
+
+  return createPortal(content, document.body);
 };
 
 const isChapterBoundaryChoiceText = (text: string) => CHAPTER_BOUNDARY_CHOICE_PATTERN.test(text.trim());

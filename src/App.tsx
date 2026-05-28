@@ -1265,15 +1265,15 @@ const SettingsSwitch = ({
     aria-checked={checked}
     aria-label={label}
     onClick={() => onChange(!checked)}
-    className={`relative h-[1.78rem] w-[3.35rem] shrink-0 rounded-full border transition-all duration-300 ${
+    className={`relative h-[1.92rem] w-[3.7rem] shrink-0 rounded-full transition-all duration-300 ${
       checked
-        ? "border-[#f4c16f] bg-[#c8872f] shadow-[inset_0_0_0_1px_rgba(255,242,216,0.28),0_0_0_1px_rgba(148,92,34,0.18),0_0_16px_rgba(214,145,52,0.22)]"
-        : "border-white/16 bg-[#d5d5d5]/82 shadow-[inset_0_1px_2px_rgba(0,0,0,0.12)] hover:bg-[#e4e4e4]/88"
+        ? "bg-[#db9a3f] shadow-[inset_0_0_0_1px_rgba(255,237,205,0.18),0_4px_16px_rgba(88,37,12,0.16)]"
+        : "bg-[#b9b9b9] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.15),0_4px_14px_rgba(43,16,8,0.12)]"
     }`}
   >
     <span
-      className={`absolute top-1/2 h-[1.42rem] w-[1.42rem] -translate-y-1/2 rounded-full bg-[#fffaf2] shadow-[0_2px_7px_rgba(0,0,0,0.34)] ring-1 ring-black/5 transition-transform duration-300 ${
-        checked ? "translate-x-[1.66rem]" : "translate-x-[0.18rem]"
+      className={`absolute top-1/2 h-[1.56rem] w-[1.56rem] -translate-y-1/2 rounded-full bg-[#f6f6f6] shadow-[0_2px_8px_rgba(0,0,0,0.22)] transition-transform duration-300 ${
+        checked ? "translate-x-[1.92rem]" : "translate-x-[0.18rem]"
       }`}
     />
   </button>
