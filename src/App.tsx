@@ -1265,15 +1265,15 @@ const SettingsSwitch = ({
     aria-checked={checked}
     aria-label={label}
     onClick={() => onChange(!checked)}
-    className={`relative h-[1.92rem] w-[3.7rem] shrink-0 rounded-full transition-all duration-300 ${
+    className={`relative h-[2rem] w-[3.8rem] shrink-0 rounded-full transition-colors duration-300 ${
       checked
-        ? "bg-[#db9a3f] shadow-[inset_0_0_0_1px_rgba(255,237,205,0.18),0_4px_16px_rgba(88,37,12,0.16)]"
-        : "bg-[#b9b9b9] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.15),0_4px_14px_rgba(43,16,8,0.12)]"
+        ? "bg-[#de9f42]"
+        : "bg-[#b1b1b1]"
     }`}
   >
     <span
-      className={`absolute top-1/2 h-[1.56rem] w-[1.56rem] -translate-y-1/2 rounded-full bg-[#f6f6f6] shadow-[0_2px_8px_rgba(0,0,0,0.22)] transition-transform duration-300 ${
-        checked ? "translate-x-[1.92rem]" : "translate-x-[0.18rem]"
+      className={`absolute left-0 top-1/2 h-[1.68rem] w-[1.68rem] -translate-y-1/2 rounded-full bg-[#f8f8f8] transition-transform duration-300 ${
+        checked ? "translate-x-[1.96rem]" : "translate-x-[0.16rem]"
       }`}
     />
   </button>
