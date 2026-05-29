@@ -1429,10 +1429,8 @@ export const JournalPage = ({
     }
 
     if (pendingPageIndex !== currentPageIndex) {
-      if (pendingItem.type === "image") {
-        setIsPageTransitioning(true);
-        setCurrentPageIndex(pendingPageIndex);
-      }
+      setIsPageTransitioning(true);
+      setCurrentPageIndex(pendingPageIndex);
       return;
     }
 

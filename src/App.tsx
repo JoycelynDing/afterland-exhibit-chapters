@@ -323,9 +323,9 @@ const readExhibitionMode = (): ExhibitionMode | null => {
 };
 
 const getExhibitionStoryStorageKey = (slug: ExhibitionMode["slug"], chapterId: string) =>
-  `afterlanddemo-story-state-${slug}-${chapterId}`;
+  `afterlanddemo-story-state-v2-${slug}-${chapterId}`;
 const getExhibitionReaderStorageKey = (slug: ExhibitionMode["slug"], chapterId: string) =>
-  `afterlanddemo-reader-progress-${slug}-${chapterId}`;
+  `afterlanddemo-reader-progress-v2-${slug}-${chapterId}`;
 
 const clearReaderProgress = ({
   storyStorageKey,
