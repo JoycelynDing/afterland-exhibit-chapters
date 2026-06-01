@@ -1428,7 +1428,10 @@ export const JournalPage = ({
       return;
     }
 
-    if (pendingPageIndex !== currentPageIndex) {
+    const shouldWaitForTutorialPageTurn =
+      tutorialEnabled && !tutorialSeen.nextPage && pendingItem.type !== "image" && pendingPageIndex > currentPageIndex;
+
+    if (pendingPageIndex !== currentPageIndex && !shouldWaitForTutorialPageTurn) {
       setIsPageTransitioning(true);
       setCurrentPageIndex(pendingPageIndex);
       return;
@@ -1461,6 +1464,8 @@ export const JournalPage = ({
     notebookPages,
     notebookPagesReady,
     pendingRevealItemId,
+    tutorialEnabled,
+    tutorialSeen.nextPage,
     typingItemId,
   ]);
 
