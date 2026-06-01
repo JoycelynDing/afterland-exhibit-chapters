@@ -113,6 +113,41 @@ const COLLECTIBLE_CLUE_OVERRIDES: Record<
     actionLabel: copy("自行阅读", "Read It Yourself"),
     relicEntryId: "RL-02",
   },
+  C003: {
+    description: copy(
+      "记录了海尔萝德在312年7月之间去领过12银币以及2包冬粮的物资领取登记表",
+      "A supply pickup ledger showing that Herlode collected 12 silver coins and 2 packs of winter grain in July 312.",
+    ),
+    relicEntryId: "RL-03",
+  },
+  C004: {
+    description: copy(
+      "母亲米兰·多尔尼的炊事人员档案",
+      "Mother Mira Dorne's kitchen staff personnel file.",
+    ),
+    relicEntryId: "RL-04",
+  },
+  C005: {
+    description: copy(
+      "海尔萝德的人员档案",
+      "Herlode's personnel file.",
+    ),
+    relicEntryId: "RL-05",
+  },
+  C006: {
+    description: copy(
+      "记录着7月巡逻追捕记录的纸页",
+      "A page recording July patrol pursuit entries.",
+    ),
+    relicEntryId: "RL-06",
+  },
+  C007: {
+    description: copy(
+      "母亲去世那年罗夫伯教区十字口的公告存档",
+      "The archived Rofberg Parish Crossroads notice from the year Mother died.",
+    ),
+    relicEntryId: "RL-07",
+  },
 };
 
 const createCollectibleClueConfig = (id: string): CollectibleClueConfig => {
@@ -231,10 +266,6 @@ export const getStoryInlineImageConfig = (chapterId: string): StoryInlineImageCo
 export const STORY_COLLECTIBLE_TRIGGERS_BY_CHAPTER_ID: Record<string, Array<{ id: string; textIncludes: string }>> = {
   "CH-01": [
     { id: C001_RELIC_ID, textIncludes: "那一眼很短" },
-    {
-      id: C002_RELIC_ID,
-      textIncludes: "我向后翻，找到了312年的公告。纸面有点发旧，四周也有些破损，但文字保存得很好",
-    },
     {
       id: C002_RELIC_ID,
       textIncludes: "我向后翻，找到了712年的公告。纸面有点发旧，四周也有些破损，但文字保存得很好",
