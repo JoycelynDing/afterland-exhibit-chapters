@@ -177,7 +177,7 @@ const CHAPTER_MUSIC_BY_CHAPTER_ID: Partial<Record<string, string>> = {
 
 const CHAPTER_MUSIC_FADE_MS = 900;
 const CHAPTER_MUSIC_CROSSFADE_SECONDS = 4;
-const STORY_STORAGE_VERSION = "afterland-main-v2";
+const STORY_STORAGE_VERSION = "afterland-main-v3";
 
 const getStoryStorageKey = (chapterId: string) => `afterland-story-state-${STORY_STORAGE_VERSION}-${chapterId}`;
 const getReaderStorageKey = (chapterId: string) => `afterland-reader-progress-${STORY_STORAGE_VERSION}-${chapterId}`;
@@ -323,9 +323,9 @@ const readExhibitionMode = (): ExhibitionMode | null => {
 };
 
 const getExhibitionStoryStorageKey = (slug: ExhibitionMode["slug"], chapterId: string) =>
-  `afterlanddemo-story-state-v2-${slug}-${chapterId}`;
+  `afterlanddemo-story-state-v3-${slug}-${chapterId}`;
 const getExhibitionReaderStorageKey = (slug: ExhibitionMode["slug"], chapterId: string) =>
-  `afterlanddemo-reader-progress-v2-${slug}-${chapterId}`;
+  `afterlanddemo-reader-progress-v3-${slug}-${chapterId}`;
 
 const clearReaderProgress = ({
   storyStorageKey,
@@ -3012,17 +3012,17 @@ const DiaryArtifactView = ({
   const [pendingSection, setPendingSection] = useState<NotebookSectionId | null>(null);
   const [isSectionPanelVisible, setIsSectionPanelVisible] = useState(true);
   const [collectedCollectibleIds, setCollectedCollectibleIds] = useState<CollectibleClueId[]>(() =>
-    typeof window === "undefined"
+    typeof window === "undefined" || isExhibitionMode
       ? []
       : COLLECTIBLE_CLUE_IDS.filter((id) => storageGetItem(COLLECTIBLE_CLUES[id].storageKey) === "true"),
   );
   const [unreadCollectibleIds, setUnreadCollectibleIds] = useState<CollectibleClueId[]>(() =>
-    typeof window === "undefined"
+    typeof window === "undefined" || isExhibitionMode
       ? []
       : COLLECTIBLE_CLUE_IDS.filter((id) => storageGetItem(COLLECTIBLE_CLUES[id].unreadStorageKey) === "true"),
   );
   const [pendingCollectibleId, setPendingCollectibleId] = useState<string | null>(() =>
-    typeof window === "undefined"
+    typeof window === "undefined" || isExhibitionMode
       ? null
       : (COLLECTIBLE_CLUE_IDS.find(
           (id) =>
@@ -3091,11 +3091,13 @@ const DiaryArtifactView = ({
         return;
       }
 
-      storageSetItem(clue.pendingStorageKey, "true");
+      if (!isExhibitionMode) {
+        storageSetItem(clue.pendingStorageKey, "true");
+      }
       setCollectibleHintVisible(false);
       setPendingCollectibleId(clue.id);
     },
-    [collectedCollectibleIds],
+    [collectedCollectibleIds, isExhibitionMode],
   );
 
   const handleCollectiblePausedAttempt = useCallback(() => {
@@ -3122,12 +3124,18 @@ const DiaryArtifactView = ({
       return;
     }
 
-    storageSetItem(clue.storageKey, "true");
-    storageRemoveItem(clue.pendingStorageKey);
+    if (!isExhibitionMode) {
+      storageSetItem(clue.storageKey, "true");
+      storageRemoveItem(clue.pendingStorageKey);
+    }
     setCollectedCollectibleIds((prev) => (prev.includes(clue.id) ? prev : [...prev, clue.id]));
     setPendingCollectibleId(null);
     setInspectingCollectibleId(null);
     setCollectibleHintVisible(false);
+
+    if (isExhibitionMode) {
+      return;
+    }
 
     if (activeSection === "relics") {
       markCollectibleRead(clue.id);
@@ -3136,7 +3144,7 @@ const DiaryArtifactView = ({
 
     storageSetItem(clue.unreadStorageKey, "true");
     setUnreadCollectibleIds((prev) => (prev.includes(clue.id) ? prev : [...prev, clue.id]));
-  }, [activeSection, markCollectibleRead]);
+  }, [activeSection, isExhibitionMode, markCollectibleRead]);
 
   useEffect(() => {
     setIsEchoing(activeSection === "journal" && journalEchoState);

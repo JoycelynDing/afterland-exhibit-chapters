@@ -36,6 +36,7 @@ const copy = (zh: string, en: string): LocalizedCopy => ({ zh, en });
 
 export const C001_RELIC_ID = "C001";
 export const C002_RELIC_ID = "C002";
+const COLLECTIBLE_STORAGE_VERSION = "v2";
 
 const storyImageModules = import.meta.glob("./assets/*.{png,PNG,jpg,JPG,jpeg,JPEG,webp,WEBP}", {
   eager: true,
@@ -161,9 +162,9 @@ const createCollectibleClueConfig = (id: string): CollectibleClueConfig => {
     description: override.description ?? getDefaultClueDescription(normalizedId),
     actionLabel: override.actionLabel ?? copy("贴入手札", "Paste into Journal"),
     hint: override.hint ?? copy("笔记本后好像有什么东西", "Something seems tucked behind the notebook"),
-    storageKey: `afterland-relic-${keySuffix}-collected`,
-    pendingStorageKey: `afterland-relic-${keySuffix}-pending`,
-    unreadStorageKey: `afterland-relic-${keySuffix}-unread`,
+    storageKey: `afterland-relic-${COLLECTIBLE_STORAGE_VERSION}-${keySuffix}-collected`,
+    pendingStorageKey: `afterland-relic-${COLLECTIBLE_STORAGE_VERSION}-${keySuffix}-pending`,
+    unreadStorageKey: `afterland-relic-${COLLECTIBLE_STORAGE_VERSION}-${keySuffix}-unread`,
     relicEntryId: override.relicEntryId ?? `RL-${normalizedId}`,
   };
 };
