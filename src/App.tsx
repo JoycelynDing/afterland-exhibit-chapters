@@ -2631,15 +2631,15 @@ const CollectiblePeekCard = ({
         event.stopPropagation();
         onOpen();
       }}
-      className={`absolute right-[-6%] top-[28%] z-[8] origin-left bg-transparent p-0 ${
-        isLargeNotice ? "w-[25.2%] drop-shadow-none" : "w-[16.8%] drop-shadow-[0_18px_32px_rgba(0,0,0,0.46)]"
+      className={`absolute right-[-30%] top-[10%] z-[8] h-[80%] origin-left bg-transparent p-0 ${
+        isLargeNotice ? "drop-shadow-none" : "drop-shadow-[0_18px_32px_rgba(0,0,0,0.46)]"
       }`}
       aria-label={label}
     >
       <img
         src={imageSrc}
         alt=""
-        className="pointer-events-none h-auto w-full rounded-[0.45rem] object-contain select-none"
+        className="pointer-events-none h-full w-auto rounded-[0.45rem] object-contain select-none"
         draggable={false}
       />
     </motion.button>
@@ -2686,7 +2686,7 @@ const CollectibleInspectOverlay = ({
               className={
                 isLargeNotice
                   ? "h-auto w-full rounded-[0.55rem] object-contain shadow-none"
-                  : "h-[min(40rem,58vh)] w-auto rounded-[0.55rem] object-contain shadow-[0_22px_70px_rgba(0,0,0,0.58)]"
+                  : "h-[min(40rem,58vh)] w-auto rounded-[0.55rem] object-contain shadow-none"
               }
               draggable={false}
             />
