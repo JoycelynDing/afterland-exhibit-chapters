@@ -2631,7 +2631,7 @@ const CollectiblePeekCard = ({
         event.stopPropagation();
         onOpen();
       }}
-      className={`absolute left-[92.8%] top-[15%] z-[8] h-[70%] w-auto origin-left bg-transparent p-0 ${
+      className={`absolute left-full top-[15%] z-[8] h-[70%] w-auto origin-left bg-transparent p-0 ${
         isLargeNotice ? "drop-shadow-none" : "drop-shadow-[0_18px_32px_rgba(0,0,0,0.46)]"
       }`}
       aria-label={label}
@@ -2639,7 +2639,7 @@ const CollectiblePeekCard = ({
       <img
         src={imageSrc}
         alt=""
-        className="pointer-events-none h-full w-auto max-w-none rounded-[0.45rem] object-contain [clip-path:inset(0_85%_0_0)] select-none"
+        className="pointer-events-none h-full w-auto max-w-none -translate-x-[85%] rounded-[0.45rem] object-contain select-none"
         draggable={false}
       />
     </motion.button>
