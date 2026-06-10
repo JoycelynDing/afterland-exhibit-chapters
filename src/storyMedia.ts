@@ -268,8 +268,24 @@ export const STORY_COLLECTIBLE_TRIGGERS_BY_CHAPTER_ID: Record<string, Array<{ id
   "CH-01": [
     { id: C001_RELIC_ID, textIncludes: "那一眼很短" },
     {
-      id: C002_RELIC_ID,
-      textIncludes: "我向后翻，找到了712年的公告。纸面有点发旧，四周也有些破损，但文字保存得很好",
+      id: "C007",
+      textIncludes: "我向后翻，找到了312年的公告。纸面有点发旧，四周也有些破损，但文字保存得很好",
+    },
+    {
+      id: "C004",
+      textIncludes: "找到那赫然盖着“已故”红色印章的母亲的名字",
+    },
+    {
+      id: "C005",
+      textIncludes: "我很快注意到了那个名字——海尔萝德",
+    },
+    {
+      id: "C006",
+      textIncludes: "前面几页都很普通。走私、越境、物资纠纷。直到我看见其中一条",
+    },
+    {
+      id: "C003",
+      textIncludes: "奖励发放记录被单独归在后面的财务档案里。我翻过去的时候，纸页已经明显更新一些了",
     },
   ],
 };
