@@ -136,7 +136,6 @@ interface JournalPageProps {
   totalCharacterCount?: number;
   storyJson?: unknown;
   collectibleTriggers?: CollectibleTrigger[];
-  collectedCollectibleIds?: string[];
   onCollectibleTrigger?: (id: string) => void;
   isPaused?: boolean;
   onPausedAdvanceAttempt?: () => void;
@@ -681,7 +680,6 @@ export const JournalPage = ({
   totalCharacterCount = 1,
   storyJson,
   collectibleTriggers,
-  collectedCollectibleIds = [],
   onCollectibleTrigger,
   isPaused = false,
   onPausedAdvanceAttempt,
@@ -758,13 +756,11 @@ export const JournalPage = ({
         return;
       }
 
-      const collectedIds = new Set(collectedCollectibleIds.map((id) => id.toUpperCase()));
       const itemContent = item.content;
 
       const matchedTrigger = collectibleTriggers.find((trigger) => {
         const normalizedId = trigger.id.toUpperCase();
         return (
-          !collectedIds.has(normalizedId) &&
           !triggeredCollectibleIdsRef.current.has(normalizedId) &&
           itemContent.includes(trigger.textIncludes)
         );
@@ -778,7 +774,7 @@ export const JournalPage = ({
       triggeredCollectibleIdsRef.current.add(normalizedId);
       onCollectibleTrigger(normalizedId);
     },
-    [collectedCollectibleIds, collectibleTriggers, onCollectibleTrigger],
+    [collectibleTriggers, onCollectibleTrigger],
   );
 
   const getHistoryToken = useCallback(
@@ -928,6 +924,7 @@ export const JournalPage = ({
     }
 
     lastInitializedTurnRef.current = turnCount;
+    triggeredCollectibleIdsRef.current.clear();
     setHasMeasuredNotebookPages(false);
     setMeasuredFlowSignature("");
     setCurrentLinesToDisplay(resolvedStoryLines);
@@ -1259,9 +1256,7 @@ export const JournalPage = ({
     const collectibleMarkerId = resolveCollectibleMarkerId(nextToken);
 
     if (collectibleMarkerId) {
-      const collectedIds = new Set(collectedCollectibleIds.map((id) => id.toUpperCase()));
-
-      if (!collectedIds.has(collectibleMarkerId) && !triggeredCollectibleIdsRef.current.has(collectibleMarkerId)) {
+      if (!triggeredCollectibleIdsRef.current.has(collectibleMarkerId)) {
         triggeredCollectibleIdsRef.current.add(collectibleMarkerId);
         onCollectibleTrigger?.(collectibleMarkerId);
       }

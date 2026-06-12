@@ -505,7 +505,7 @@ const UI_COPY = {
       journalArchive: "日记档案",
       cartography: "测绘图",
       syncing: "叙事同步中...",
-      startEcho: "开始回响",
+      startEcho: "开始游戏",
       scanData: "环境扫描数据",
       exitEcho: "终端中断回响",
       choicePrefix: "回响抉择：",
@@ -583,7 +583,7 @@ const UI_COPY = {
       journalArchive: "Journal Archive",
       cartography: "Cartography",
       syncing: "Narrative Syncing...",
-      startEcho: "Start Echo",
+      startEcho: "Start Game",
       scanData: "Environmental Scan",
       exitEcho: "Exit Echo",
       choicePrefix: "Echo Choice:",
@@ -2073,13 +2073,13 @@ const ExhibitionNotice = ({ visible }: { visible: boolean }) => (
   <AnimatePresence>
     {visible ? (
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 10, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 8, scale: 0.98 }}
         transition={{ duration: 0.28, ease: "easeOut" }}
-        className="pointer-events-none fixed bottom-8 left-1/2 z-[140] -translate-x-1/2"
+        className="pointer-events-none fixed left-1/2 top-1/2 z-[140] -translate-x-1/2 -translate-y-1/2"
       >
-        <div className="whitespace-nowrap rounded-[1.1rem] border border-[#c5a57c]/28 bg-[#2d1b10]/78 px-5 py-2.5 text-center font-chinese text-[clamp(0.82rem,0.8rem+0.1vw,0.92rem)] leading-none tracking-[0.06em] text-[#f3e0c3] shadow-[0_14px_26px_rgba(0,0,0,0.28)] backdrop-blur-[4px]">
+        <div className="whitespace-nowrap rounded-[1.1rem] border border-[#c5a57c]/32 bg-[#2d1b10]/86 px-7 py-4 text-center font-chinese text-[clamp(1rem,0.94rem+0.18vw,1.18rem)] leading-none tracking-[0.06em] text-[#f3e0c3] shadow-[0_18px_40px_rgba(0,0,0,0.34)] backdrop-blur-[5px]">
           {EXHIBITION_LOCKED_NOTICE}
         </div>
       </motion.div>
@@ -3087,7 +3087,7 @@ const DiaryArtifactView = ({
   const handleCollectibleTrigger = useCallback(
     (id: string) => {
       const clue = getCollectibleClue(id);
-      if (!clue || collectedCollectibleIds.includes(clue.id)) {
+      if (!clue) {
         return;
       }
 
@@ -3097,7 +3097,7 @@ const DiaryArtifactView = ({
       setCollectibleHintVisible(false);
       setPendingCollectibleId(clue.id);
     },
-    [collectedCollectibleIds, isExhibitionMode],
+    [isExhibitionMode],
   );
 
   const handleCollectiblePausedAttempt = useCallback(() => {
@@ -3605,7 +3605,6 @@ const DiaryArtifactView = ({
                           progressStorageKey={chapterReaderStorageKey}
                           storyStorageKey={chapterStoryStorageKey}
                           collectibleTriggers={STORY_COLLECTIBLE_TRIGGERS_BY_CHAPTER_ID[chapter.id]}
-                          collectedCollectibleIds={collectedCollectibleIds}
                           onCollectibleTrigger={handleCollectibleTrigger}
                           isPaused={isCollectibleInteractionOpen}
                           onPausedAdvanceAttempt={handleCollectiblePausedAttempt}
@@ -4198,19 +4197,17 @@ export default function App() {
                 backgroundSize: "cover",
               }}
             >
-              <div className="absolute left-4 top-4 z-50 sm:left-6 sm:top-6 lg:left-8 lg:top-8">
-                <CornerActionButton
-                  label={ui.detail.backToHub}
-                  onClick={() => {
-                    if (isExhibitionMode) {
-                      showExhibitionLockedNotice();
-                      return;
-                    }
-                    setIsSettingsOpen(false);
-                    setView("home");
-                  }}
-                />
-              </div>
+              {!isExhibitionMode ? (
+                <div className="absolute left-4 top-4 z-50 sm:left-6 sm:top-6 lg:left-8 lg:top-8">
+                  <CornerActionButton
+                    label={ui.detail.backToHub}
+                    onClick={() => {
+                      setIsSettingsOpen(false);
+                      setView("home");
+                    }}
+                  />
+                </div>
+              ) : null}
 
               <div
                 className={`absolute inset-0 transition-opacity duration-500 ease-out ${
@@ -4249,16 +4246,16 @@ export default function App() {
                 )}
               </div>
 
-              <DesktopQuickMenu
-                activeTab={activeTab}
-                language={language}
-                disabled={isExhibitionMode}
-                onLockedSelect={showExhibitionLockedNotice}
-                onSelect={(panel) => {
-                  setIsSettingsOpen(false);
-                  setActiveTab(panel);
-                }}
-              />
+              {!isExhibitionMode ? (
+                <DesktopQuickMenu
+                  activeTab={activeTab}
+                  language={language}
+                  onSelect={(panel) => {
+                    setIsSettingsOpen(false);
+                    setActiveTab(panel);
+                  }}
+                />
+              ) : null}
             </DesktopContainer>
           </motion.div>
         )}
