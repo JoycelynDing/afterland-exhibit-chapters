@@ -234,6 +234,39 @@ const ScreenEdgeProgress = ({
   return createPortal(content, document.body);
 };
 
+const MouseLeftButtonIcon = () => (
+  <span
+    aria-hidden="true"
+    className="relative inline-flex h-[1.15em] w-[0.76em] shrink-0 translate-y-[0.08em] rounded-[0.34em] border border-current/75"
+  >
+    <span className="absolute left-1/2 top-[0.15em] h-[0.35em] w-px -translate-x-1/2 bg-current/60" />
+    <span className="absolute left-[0.11em] top-[0.13em] h-[0.39em] w-[0.24em] rounded-tl-[0.22em] bg-current/65" />
+  </span>
+);
+
+const NotebookInstructionGuide = () => {
+  const content = (
+    <div className="pointer-events-none fixed bottom-[2rem] left-[2.2rem] z-[90] max-w-[22rem] select-none font-chinese text-[0.82rem] leading-[1.85] tracking-[0.08em] text-[#ead8b7]/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+      <div className="flex items-start gap-[0.5rem]">
+        <MouseLeftButtonIcon />
+        <span>左键单击笔记本继续显示文字</span>
+      </div>
+      <div>笔记本左右页角箭头可前后翻页</div>
+      <div>
+        <span>当出现浮动选项可单击做出选择</span>
+        <br />
+        <span>将会影响剧情走向</span>
+      </div>
+    </div>
+  );
+
+  if (typeof document === "undefined") {
+    return content;
+  }
+
+  return createPortal(content, document.body);
+};
+
 const isChapterBoundaryChoiceText = (text: string) => CHAPTER_BOUNDARY_CHOICE_PATTERN.test(text.trim());
 
 const TUTORIAL_TARGETS: Record<
@@ -2372,6 +2405,7 @@ export const JournalPage = ({
         transition={{ duration: CHAPTER_EXIT_FADE_MS / 1000, ease: "easeOut" }}
       >
         <ScreenEdgeProgress progress={progressRatio} animateQuickly={Boolean(typingItemId)} />
+        <NotebookInstructionGuide />
 
         <button
           type="button"
