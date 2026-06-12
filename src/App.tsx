@@ -3525,7 +3525,7 @@ const DiaryArtifactView = ({
                   )}
                   <span
                     className={`absolute inset-0 flex items-center justify-center px-[18%] text-center font-chinese text-[clamp(1rem,0.82rem+0.28vw,1.45rem)] font-semibold tracking-[0.1em] text-[#39251b] ${
-                      section === "journal" ? "" : "opacity-20"
+                      section === "journal" ? "" : "opacity-40"
                     }`}
                   >
                     {NOTEBOOK_SECTION_LABELS[section][language]}
